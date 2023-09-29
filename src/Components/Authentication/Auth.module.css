@@ -1,7 +1,7 @@
 .authForm {
   display: flex;
   flex-direction: column;
-  width: 40%;
+  width: 50%;
   text-align: center;
   margin: 30px auto;
   padding: 6px;
@@ -48,7 +48,7 @@
   width: 70%;
   border: none;
   background: none;
-  color: rgb(255, 183, 0);
+  color: red;
   margin: 3px auto;
   font-size: 0.9rem;
   font-weight: bold;
@@ -56,13 +56,28 @@
 }
 
 @media (max-width: 768px) {
-    .authForm h2{
-        font-size: 1.8em;
-    }
+  .authForm h2 {
+    font-size: 1.8em;
+  }
 }
 
-@media (max-width: 480px){
-    .authForm h2{
-        font-size: 1.4em;
-    }
+@media (max-width: 480px) {
+  .authForm h2 {
+    font-size: 1.4em;
+  }
+}
+
+.inputContainer {
+  position: relative;
+  display: inline-block;
+}
+
+.inputContainer button {
+  position: absolute;
+  right: 30px;
+  top: 30%;
+  transform: translate(-50%);
+  border: none;
+  background: none;
+  font-size: 1.2rem;
 }

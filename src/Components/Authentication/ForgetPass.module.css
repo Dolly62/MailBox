@@ -1,0 +1,8 @@
+.forgetBtn{
+    border: none;
+    background: none;
+    color: rgb(255, 183, 0);
+    margin: 6px auto;
+    font-size: 0.8rem;
+    font-weight: bold;
+}

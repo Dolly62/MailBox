@@ -1,6 +1,10 @@
-import React, { Fragment, useState } from "react";
+import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 import classes from "./Auth.module.css";
-
+import ForgetPass from "./ForgetPass";
+import { BiHide, BiShowAlt } from "react-icons/bi";
+import { useDispatch } from "react-redux";
+import { authAction } from "../../Store/AuthReducer";
 
 const Auth = () => {
   const [enteredEmail, setEnteredEmail] = useState("");
@@ -8,6 +12,11 @@ const Auth = () => {
   const [enteredConfirmPassword, setEnteredConfirmPassword] = useState("");
   const [isLogin, setIsLogin] = useState(true);
   const [errorMsg, setErrorMsg] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
+  const dispatch = useDispatch();
+
+  const history = useHistory();
 
   const switchAuthModeHandler = () => {
     setIsLogin((prevState) => !prevState);
@@ -17,24 +26,18 @@ const Auth = () => {
     e.preventDefault();
     // console.log("Clicked");
     let url;
-    // if (isLogin) {
-    // } else {
-    //   if (enteredPassword === enteredConfirmPassword) {
-    //     url =
-    //       "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBuyjguY7nc7Y8QJMP1I-lwBAngSvprsoA";
-    //   } else {
-    //     alert("Please put the correct password");
-    //   }
-    // }
-    try {
+    if (isLogin) {
+      url =
+        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBuyjguY7nc7Y8QJMP1I-lwBAngSvprsoA";
+    } else {
       if (enteredPassword === enteredConfirmPassword) {
         url =
           "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBuyjguY7nc7Y8QJMP1I-lwBAngSvprsoA";
       } else {
-        const passwordErr = "Please put the correct password.";
-        throw new Error(passwordErr);
+        alert("Please put the correct password");
       }
-
+    }
+    try {
       const response = await fetch(url, {
         method: "POST",
         body: JSON.stringify({
@@ -51,18 +54,26 @@ const Auth = () => {
         const emailExist =
           "Email already exists. Please use a diiferent email.";
         throw new Error(emailExist);
+      } else if (data.error && data.error.message === "INVALID_PASSWORD") {
+        const passwordInvalid = "Invalid Password";
+        throw new Error(passwordInvalid);
+      } else if (data.error && data.error.message === "EMAIL_NOT_FOUND") {
+        const emailNotFound = "Email Not Found";
+        throw new Error(emailNotFound);
       } else if (
         data.error &&
         data.error.message === "TOO_MANY_ATTEMPTS_TRY_LATER"
       ) {
         const emailAttempts = "Try again later";
         throw new Error(emailAttempts);
-      } else if (!response.ok) {
-        throw new Error("Please try again");
-      }
+      } 
 
       console.log(data.idToken);
       localStorage.setItem("idToken", data.idToken);
+
+      dispatch(authAction.login({token: data.idToken}));
+
+      history.push("/welcome");
     } catch (error) {
       setErrorMsg(error.message);
     } finally {
@@ -100,14 +111,19 @@ const Auth = () => {
           onChange={enteredEmailHandler}
           required
         />
-        <input
-          id="Password"
-          type="password"
-          placeholder="Enter your password.."
-          value={enteredPassword}
-          onChange={enteredPasswordHandler}
-          required
-        />
+        <div className={classes.inputContainer}>
+          <input
+            id="Password"
+            type={showPassword ? "text" : "password"}
+            placeholder="Enter your password.."
+            value={enteredPassword}
+            onChange={enteredPasswordHandler}
+            required
+          />
+          <button onClick={() => setShowPassword(!showPassword)}>
+            {showPassword ? <BiHide /> : <BiShowAlt />}
+          </button>
+        </div>
         {!isLogin && (
           <input
             id="Confirmpassword"
@@ -119,7 +135,11 @@ const Auth = () => {
           />
         )}
 
-        <button className={classes.btn} type="submit">{isLogin ? "Login" : "Signup"}</button>
+        {isLogin && <ForgetPass />}
+
+        <button className={classes.btn} type="submit">
+          {isLogin ? "Login" : "Signup"}
+        </button>
         <button className={classes.switchBtn} onClick={switchAuthModeHandler}>
           {isLogin ? "Don't have an account? Signup" : "Have an account? Login"}
         </button>
