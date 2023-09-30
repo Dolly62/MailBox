@@ -1,0 +1,29 @@
+
+.welcomeSrn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 40px auto;
+}
+
+.welcomeSrn h1{
+    color: rgb(47, 68, 207);
+}
+
+@media (max-width: 768px) {
+  .welcomeSrn h1 {
+    font-size: 1.7em;
+  }
+  .welcomeSrn img{
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .welcomeSrn h1 {
+    font-size: 1em;
+  }
+  .welcomeSrn img{
+    width: 70%;
+  }
+}

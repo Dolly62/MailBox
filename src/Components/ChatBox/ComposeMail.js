@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import classes from "./ComposeMail.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { mailActions } from "../../Store/ComposeMails";
+
+
 const ComposeMail = () => {
   const [composeEmail, setComposeEmail] = useState("");
   const [composeSubject, setComposeSubject] = useState("");
@@ -92,7 +94,7 @@ const ComposeMail = () => {
             placeholder="Write something..."
             value={textArea}
             onChange={composeTextAreaHandler}
-            style={{ height: "70vh" }}
+            style={{ height: "60vh" }}
           />
         </div>
 

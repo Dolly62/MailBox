@@ -3,7 +3,7 @@
   flex-direction: column;
   width: 50%;
   text-align: center;
-  margin: 30px auto;
+  margin: 70px auto;
   padding: 6px;
   border: none;
   border-radius: 6px;
@@ -27,17 +27,17 @@
   border: none;
   border-radius: 6px;
   background: rgb(243, 200, 200);
-  height: 4vh;
+  height: 6vh;
   font-size: 0.9rem;
   padding: 4px;
 }
 .btn {
-  width: 50%;
+  width: 40%;
   margin: 16px auto;
   border: none;
   border-radius: 6px;
-  background: green;
-  height: 5vh;
+  background: rgb(47, 68, 207);
+  height: 6vh;
   color: white;
   font-size: 0.9rem;
   font-weight: bold;

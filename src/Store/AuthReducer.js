@@ -6,6 +6,12 @@ const initialAuthState = {
     email: localStorage.getItem("email"),
 }
 
+if(initialAuthState.token){
+    initialAuthState.isLoggedIn = true
+}else{
+    localStorage.removeItem("idToken")
+    localStorage.removeItem("email")
+}
 
 const authSlice = createSlice({
     name: "auth",

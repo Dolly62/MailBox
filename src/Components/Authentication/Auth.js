@@ -22,7 +22,7 @@ const Auth = () => {
     //to prevent the default behaviour
     e.preventDefault();
     setShowPassword((prevState) => !prevState);
-  }
+  };
 
   const switchAuthModeHandler = () => {
     setIsLogin((prevState) => !prevState);
@@ -77,9 +77,14 @@ const Auth = () => {
       console.log(data.idToken);
       console.log(data.email);
       localStorage.setItem("idToken", data.idToken);
-      localStorage.setItem("email", data.email )
+      localStorage.setItem("email", data.email);
 
-      dispatch(authAction.login({ token: data.idToken, email: data.email }));
+      dispatch(
+        authAction.login({
+          token: localStorage.getItem("idToken"),
+          email: localStorage.getItem("email"),
+        })
+      );
 
       history.push("/welcome");
     } catch (error) {
@@ -128,9 +133,11 @@ const Auth = () => {
             onChange={enteredPasswordHandler}
             required
           />
-          {isLogin &&<button onClick={showTextHandler}>
-            {showPassword ? <BiHide /> : <BiShowAlt />}
-          </button>}
+          {isLogin && (
+            <button onClick={showTextHandler}>
+              {showPassword ? <BiHide /> : <BiShowAlt />}
+            </button>
+          )}
         </div>
         {!isLogin && (
           <input
