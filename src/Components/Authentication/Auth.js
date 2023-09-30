@@ -10,13 +10,19 @@ const Auth = () => {
   const [enteredEmail, setEnteredEmail] = useState("");
   const [enteredPassword, setEnteredPassword] = useState("");
   const [enteredConfirmPassword, setEnteredConfirmPassword] = useState("");
-  const [isLogin, setIsLogin] = useState(true);
+  const [isLogin, setIsLogin] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
   const dispatch = useDispatch();
 
   const history = useHistory();
+
+  const showTextHandler = (e) => {
+    //to prevent the default behaviour
+    e.preventDefault();
+    setShowPassword((prevState) => !prevState);
+  }
 
   const switchAuthModeHandler = () => {
     setIsLogin((prevState) => !prevState);
@@ -52,7 +58,7 @@ const Auth = () => {
       const data = await response.json();
       if (data.error && data.error.message === "EMAIL_EXISTS") {
         const emailExist =
-          "Email already exists. Please use a diiferent email.";
+          "Email already exists. Please use a different email.";
         throw new Error(emailExist);
       } else if (data.error && data.error.message === "INVALID_PASSWORD") {
         const passwordInvalid = "Invalid Password";
@@ -66,12 +72,14 @@ const Auth = () => {
       ) {
         const emailAttempts = "Try again later";
         throw new Error(emailAttempts);
-      } 
+      }
 
       console.log(data.idToken);
+      console.log(data.email);
       localStorage.setItem("idToken", data.idToken);
+      localStorage.setItem("email", data.email )
 
-      dispatch(authAction.login({token: data.idToken}));
+      dispatch(authAction.login({ token: data.idToken, email: data.email }));
 
       history.push("/welcome");
     } catch (error) {
@@ -120,9 +128,9 @@ const Auth = () => {
             onChange={enteredPasswordHandler}
             required
           />
-          <button onClick={() => setShowPassword(!showPassword)}>
+          {isLogin &&<button onClick={showTextHandler}>
             {showPassword ? <BiHide /> : <BiShowAlt />}
-          </button>
+          </button>}
         </div>
         {!isLogin && (
           <input

@@ -1,0 +1,53 @@
+* {
+  box-sizing: border-box;
+}
+
+.container {
+  border: none;
+  border-radius: 6px;
+  width: 70%;
+  margin: 20px auto;
+  text-align: center;
+  padding: 2px;
+  box-shadow: 3px 3px 20px 1px rgb(243, 200, 200);
+}
+
+.container form{
+    margin: 20px auto;
+}
+.row1 {
+  border-bottom: 1px solid brown;
+  width: 90%;
+  margin: 7px auto;
+}
+.row1 input {
+  width: 93%;
+  border: none;
+  margin: 2px;
+  height: 5vh;
+  font-size: 0.9rem;
+}
+
+.row1 label{
+    background: brown;
+    border: none;
+    border-radius: 4px;
+    padding: 4px;
+    color: white;
+}
+
+.container .row2 input,
+textarea {
+  width: 90%;
+  height: 5vh;
+  padding: 12px auto;
+  border: none;
+  border-bottom: 1px solid brown;
+  margin: 7px auto;
+  font-size: 0.9rem;
+  /* resize: vertical; */
+}
+
+input:focus{
+    border: 1px solid white;
+}
