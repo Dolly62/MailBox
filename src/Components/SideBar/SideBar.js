@@ -3,6 +3,7 @@ import { FcMenu } from "react-icons/fc";
 import Routes from "./Routes";
 import classes from "./SideBar.module.css";
 import Header from "../Header/Header";
+import Search from "../Header/Search";
 
 const SideBar = () => {
   const [isNav, setNav] = useState(true);
@@ -24,6 +25,7 @@ const SideBar = () => {
         )}
       </div>
       <div className={classes.right}>
+        <Search />
         <Routes />
       </div>
     </div>

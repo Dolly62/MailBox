@@ -13,7 +13,20 @@ const Logout = () => {
     localStorage.removeItem("email");
     history.replace("/login");
   };
-  return <button onClick={logoutHandler}>Logout</button>;
+  return (
+    <button
+      onClick={logoutHandler}
+      style={{
+        border: "none",
+        background: "none",
+        color: "white",
+        fontSize: "1.1rem",
+        fontWeight: "bold",
+      }}
+    >
+      Logout
+    </button>
+  );
 };
 
 export default Logout;

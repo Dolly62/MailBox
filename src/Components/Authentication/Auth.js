@@ -74,8 +74,8 @@ const Auth = () => {
         throw new Error(emailAttempts);
       }
 
-      console.log(data.idToken);
-      console.log(data.email);
+      // console.log(data.idToken);
+      // console.log(data.email);
       localStorage.setItem("idToken", data.idToken);
       localStorage.setItem("email", data.email);
 

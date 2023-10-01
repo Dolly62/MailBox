@@ -17,17 +17,27 @@ const Header = () => {
           </NavLink>
         )}
         {isLoggedIn && (
-          <div className="row">
+          <div className={classes.row}>
             <NavLink to="/welcome">Home</NavLink>
           </div>
         )}
+        {isLoggedIn && (
+          <div className={classes.row}>
+            <NavLink to="/inbox">Inbox</NavLink>
+          </div>
+        )}
+        {isLoggedIn && (
+          <div className={classes.row}>
+            <NavLink to="/sent-box">Sent</NavLink>
+          </div>
+        )}
         {!isLoggedIn && (
-          <div className="row">
+          <div className={classes.row}>
             <NavLink to="/login">Login</NavLink>
           </div>
         )}
         {isLoggedIn && (
-          <div className="row">
+          <div className={classes.row}>
             <Logout />
           </div>
         )}

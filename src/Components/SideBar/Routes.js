@@ -4,6 +4,8 @@ import Auth from "../Authentication/Auth";
 import Welcome from "../WelcomeScreen/Welcome";
 import ComposeMail from "../ChatBox/ComposeMail";
 import { useSelector } from "react-redux";
+import Inbox from "../ChatBox/Inbox";
+import Sent from "../ChatBox/Sent";
 
 const Routes = () => {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
@@ -20,6 +22,13 @@ const Routes = () => {
         <Route path="/send-mail">
           {isLoggedIn && <ComposeMail />}{" "}
           {!isLoggedIn && <Redirect to="/login" />}
+        </Route>
+        <Route path="/sent-box">
+          {isLoggedIn && <Sent />}{" "}
+          {!isLoggedIn && <Redirect to="/login" />}
+        </Route>
+        <Route path="/inbox">
+          {isLoggedIn && <Inbox />} {!isLoggedIn && <Redirect to="/login" />}
         </Route>
       </Switch>
     </div>
