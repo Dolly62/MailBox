@@ -10,7 +10,7 @@ const Auth = () => {
   const [enteredEmail, setEnteredEmail] = useState("");
   const [enteredPassword, setEnteredPassword] = useState("");
   const [enteredConfirmPassword, setEnteredConfirmPassword] = useState("");
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState(true);
   const [errorMsg, setErrorMsg] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
@@ -55,27 +55,12 @@ const Auth = () => {
           "Content-Type": "application/json",
         },
       });
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error.message);
+      } 
       const data = await response.json();
-      if (data.error && data.error.message === "EMAIL_EXISTS") {
-        const emailExist =
-          "Email already exists. Please use a different email.";
-        throw new Error(emailExist);
-      } else if (data.error && data.error.message === "INVALID_PASSWORD") {
-        const passwordInvalid = "Invalid Password";
-        throw new Error(passwordInvalid);
-      } else if (data.error && data.error.message === "EMAIL_NOT_FOUND") {
-        const emailNotFound = "Email Not Found";
-        throw new Error(emailNotFound);
-      } else if (
-        data.error &&
-        data.error.message === "TOO_MANY_ATTEMPTS_TRY_LATER"
-      ) {
-        const emailAttempts = "Try again later";
-        throw new Error(emailAttempts);
-      }
-
       // console.log(data.idToken);
-      // console.log(data.email);
       localStorage.setItem("idToken", data.idToken);
       localStorage.setItem("email", data.email);
 
@@ -85,6 +70,9 @@ const Auth = () => {
           email: localStorage.getItem("email"),
         })
       );
+
+      // console.log(data.idToken);
+      // console.log(data.email);
 
       history.push("/welcome");
     } catch (error) {

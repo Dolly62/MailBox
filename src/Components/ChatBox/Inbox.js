@@ -1,12 +1,13 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { mailActions } from "../../Store/ComposeMails";
+import classes from "./Inbox.module.css";
 
 const Inbox = () => {
-  const mailMsg = useSelector((state) => state.composeMail.mailMsg);
+  const receivedMailmsg = useSelector((state) => state.composeMail.sentMailMsg);
   const email = useSelector((state) => state.auth.email);
-  const composeEmail = useSelector((state) => state.composeMail.sentMail);
-  console.log(composeEmail);
+
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
   const dispatch = useDispatch();
 
@@ -14,7 +15,7 @@ const Inbox = () => {
     const editEmail = email.replace(/[@.]/g, "");
     try {
       const response = await fetch(
-        `https://mailbox-client-477fb-default-rtdb.firebaseio.com/composeMail.json?"${composeEmail}"&equalTo="${editEmail}"`
+        `https://mailbox-client-477fb-default-rtdb.firebaseio.com/composeMail/${editEmail}.json`
       );
 
       if (!response.ok) {
@@ -22,16 +23,15 @@ const Inbox = () => {
         throw new Error(errmsg);
       }
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
 
-      if (data != null) {
-        const fetchingMails = Object.keys(data).map((key) => ({
+      if (data) {
+        const allMails = Object.keys(data).map((key) => ({
           name: key,
           ...data[key],
         }));
-        dispatch(mailActions.replaceMails({ mailMsg: fetchingMails }));
-      } else {
-        return;
+        // console.log(allMails);
+        dispatch(mailActions.replaceMails({ MailMsg: allMails }));
       }
     } catch (error) {
       alert(error.message);
@@ -39,25 +39,32 @@ const Inbox = () => {
   };
 
   useEffect(() => {
-    fetchMailDataForInbox();
-  }, []);
+    if (isLoggedIn) {
+      fetchMailDataForInbox();
+    } else {
+      dispatch(mailActions.clearAllMails());
+    }
+  }, [isLoggedIn]);
 
   return (
-    <table>
-      <tbody>
-        {mailMsg && mailMsg > 0 ? (
-          mailMsg.map((mail) => (
-            <tr key={mail.name} id={mail.name}>
-              <td>{mail.composeEmail}</td>
-            </tr>
-          ))
-        ) : (
-          <tr>
-            <td>No mail is found</td>
-          </tr>
-        )}
-      </tbody>
-    </table>
+    <div className={classes.container}>
+      {receivedMailmsg && receivedMailmsg.length > 0 ? (
+        receivedMailmsg.map((mail) => (
+          <div key={mail.name} id={mail.name} className={classes.row}>
+            <div className={classes.col}>{mail.from}</div>
+            <div className={classes.col}>
+              {mail.composeSubject}
+              <span style={{ color: "grey" }}>{mail.textArea}</span>
+            </div>
+            <div className={classes.col}>{mail.atTime}</div>
+          </div>
+        ))
+      ) : (
+        <div className={classes.row}>
+          <div style={{ margin: "2px auto" }}>No mail is found</div>
+        </div>
+      )}
+    </div>
   );
 };
 

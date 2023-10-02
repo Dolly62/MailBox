@@ -4,7 +4,7 @@ import { mailActions } from "../../Store/ComposeMails";
 import classes from "./Sent.module.css";
 
 const Sent = () => {
-  const mailMsg = useSelector((state) => state.composeMail.mailMsg);
+  const mailMsg = useSelector((state) => state.composeMail.sentMailMsg);
   const email = useSelector((state) => state.auth.email);
   console.log(email);
   const dispatch = useDispatch();
@@ -29,7 +29,7 @@ const Sent = () => {
           ...data[key],
         }));
         console.log(allMails);
-        dispatch(mailActions.replaceMails({ mailMsg: allMails }));
+        dispatch(mailActions.replaceMails({ sentMailMsg: allMails }));
       }
     } catch (error) {
       alert(error.message);
@@ -39,7 +39,7 @@ const Sent = () => {
   useEffect(() => {
     if (isLoggedIn) {
       fetchfunctionHandler();
-    }else{
+    } else {
       dispatch(mailActions.clearAllMails());
     }
   }, [isLoggedIn]);
@@ -53,17 +53,16 @@ const Sent = () => {
               To:<span>{mail.composeEmail}</span>
             </div>
             <div className={classes.col}>
-              {mail.composeSubject}<span style={{color: "grey"}}>{mail.textArea}</span>
+              {mail.composeSubject}
+              <span style={{ color: "grey" }}>{mail.textArea}</span>
             </div>
-            <span className={classes.col}>
-              {mail.atTime}
-            </span>
+            <span className={classes.col}>{mail.atTime}</span>
           </div>
         ))
       ) : (
-        <tr>
-          <td>No mail is found</td>
-        </tr>
+        <div className={classes.row}>
+          <div style={{ margin: "2px auto" }}>No mail is found</div>
+        </div>
       )}
     </div>
   );

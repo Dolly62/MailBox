@@ -30,22 +30,24 @@ const ComposeMail = () => {
   // console.log(formattedDate);
   // console.log(formattedTime);
 
-
-
   const composeEmailSubmitHandler = async (e) => {
     e.preventDefault();
     const editEmail = emailId.replace(/[@.]/g, "");
+    const editComposeEmail = composeEmail.replace(/[@.]/g, "");
+
+    
     const composeMailData = {
+      from: emailId,
       composeEmail,
       composeSubject,
       textArea,
       atDate: formattedDate,
-      atTime: formattedTime
+      atTime: formattedTime,
     };
 
     try {
       const response = await fetch(
-        `https://mailbox-client-477fb-default-rtdb.firebaseio.com/composeMail/${editEmail}.json`,
+        `https://mailbox-client-477fb-default-rtdb.firebaseio.com/composeMail/${editComposeEmail}.json`,
         {
           method: "POST",
           body: JSON.stringify(composeMailData),
@@ -57,17 +59,18 @@ const ComposeMail = () => {
         const errorMailMsg = "Something went wrong..";
         throw new Error(errorMailMsg);
       }
-      // console.log(data);
       dispatch(
-        mailActions.addMails({
+        mailActions.addSentMails({
           name: data.name,
+          from: emailId,
           composeEmail,
           composeSubject,
           textArea,
           atDate: formattedDate,
-          atTime: formattedTime
+          atTime: formattedTime,
         })
       );
+      alert("Sent successfully");
     } catch (error) {
       alert(error.message);
     } finally {
@@ -77,48 +80,46 @@ const ComposeMail = () => {
     }
   };
 
-  const fetchMailData = async () => {
-    const editEmail = emailId.replace(/[@.]/g, "");
-    try {
-      const response = await fetch(
-        `https://mailbox-client-477fb-default-rtdb.firebaseio.com/composeMail/${editEmail}.json`
-      );
+  // const fetchMailData = async () => {
+  //   const editEmail = emailId.replace(/[@.]/g, "");
+  //   try {
+  //     const response = await fetch(
+  //       `https://mailbox-client-477fb-default-rtdb.firebaseio.com/composeMail/${editEmail}.json`
+  //     );
 
-      if (!response.ok) {
-        const errorMsg = "Something went wrong";
-        throw new Error(errorMsg);
-      }
+  //     if (!response.ok) {
+  //       const errorMsg = "Something went wrong";
+  //       throw new Error(errorMsg);
+  //     }
 
-      const data = await response.json();
-      // console.log(data);
-      if(data){
-        const keyys = Object.keys(data);
-        const latestMailKey = keyys[0];
-        const extractedData = data[latestMailKey];
-        setLastSentData(extractedData);
-        // console.log(extractedData);
-      }else{
-        setLastSentData(null);
-      }
-    } catch (error) {
-      alert(error.message);
-    }
-  };
+  //     const data = await response.json();
+  //     // console.log(data);
+  //     if (data) {
+  //       const keyys = Object.keys(data);
+  //       const latestMailKey = keyys[0];
+  //       const extractedData = data[latestMailKey];
+  //       setLastSentData(extractedData);
+  //       // console.log(extractedData);
+  //     } else {
+  //       setLastSentData(null);
+  //     }
+  //   } catch (error) {
+  //     alert(error.message);
+  //   }
+  // };
 
-  useEffect(() => {
-    fetchMailData();
-  }, []);
+  // useEffect(() => {
+  //   fetchMailData();
+  // }, []);
 
-  useEffect(() => {
-    // console.log(lastSentData);
-    if (lastSentData) {
-      setComposeEmail(lastSentData.composeEmail);
-      setComposeSubject(lastSentData.composeSubject);
-      setTextArea(lastSentData.textArea);
-    }
-  }, [lastSentData]);
-
-  
+  // useEffect(() => {
+  //   // console.log(lastSentData);
+  //   if (lastSentData) {
+  //     setComposeEmail(lastSentData.composeEmail);
+  //     setComposeSubject(lastSentData.composeSubject);
+  //     setTextArea(lastSentData.textArea);
+  //   }
+  // }, [lastSentData]);
 
   const composeEmailHandler = (e) => {
     setComposeEmail(e.target.value);
@@ -135,7 +136,9 @@ const ComposeMail = () => {
     <div className={classes.container}>
       <form onSubmit={composeEmailSubmitHandler}>
         <div className={classes.row}>
-          <label htmlFor="to" style={{ fontWeight: "bold"}}>To:</label>
+          <label htmlFor="to" style={{ fontWeight: "bold" }}>
+            To:
+          </label>
           <input
             id="to"
             type="email"
