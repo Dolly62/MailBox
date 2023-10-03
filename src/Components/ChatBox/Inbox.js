@@ -1,15 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { mailActions } from "../../Store/ComposeMails";
 import classes from "./Inbox.module.css";
+import { Link } from "react-router-dom/cjs/react-router-dom";
 
 const Inbox = () => {
-  const receivedMailmsg = useSelector((state) => state.composeMail.sentMailMsg);
+  const receivedMailmsg = useSelector(
+    (state) => state.composeMail.receivedMailmsg
+  );
   const email = useSelector((state) => state.auth.email);
 
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
   const dispatch = useDispatch();
+
+  const MAX_CHARACTERS = 30;
 
   const fetchMailDataForInbox = async () => {
     const editEmail = email.replace(/[@.]/g, "");
@@ -31,7 +36,9 @@ const Inbox = () => {
           ...data[key],
         }));
         // console.log(allMails);
-        dispatch(mailActions.replaceMails({ MailMsg: allMails }));
+        const unreadMails = allMails.filter((mail) => !mail.isRead);
+        dispatch(mailActions.addReceivedMails({ receivedMailmsg: allMails }));
+        dispatch(mailActions.updateUnreadMsgCount(unreadMails.length));
       }
     } catch (error) {
       alert(error.message);
@@ -46,18 +53,60 @@ const Inbox = () => {
     }
   }, [isLoggedIn]);
 
+  const limitText = (text) => {
+    if (text && text.length > MAX_CHARACTERS) {
+      return text.substring(0, MAX_CHARACTERS) + "...";
+    }
+    return text;
+  };
+
+  // IS MESSAGE READ OR NOT HANDLER
+  const readMsgHandler = async (msgName, isRead) => {
+    const editEmail = email.replace(/[@.]/g, "");
+    try {
+      const response = await fetch(
+        `https://mailbox-client-477fb-default-rtdb.firebaseio.com/composeMail/${editEmail}/${msgName}.json`,
+        {
+          method: "PATCH",
+          body: JSON.stringify({
+            isRead: true,
+          }),
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to update");
+      }
+
+      const data = await response.json();
+      console.log(data);
+      dispatch(mailActions.markMsgAsRead({ msgName: msgName, isRead: true }));
+      if(isRead){
+        dispatch(mailActions.updateUnreadMsgCount(-1))
+      }
+    } catch (error) {
+      alert(error.message);
+    }
+  };
+
   return (
     <div className={classes.container}>
       {receivedMailmsg && receivedMailmsg.length > 0 ? (
         receivedMailmsg.map((mail) => (
-          <div key={mail.name} id={mail.name} className={classes.row}>
+          <Link
+            to={`/inbox/${mail.name}`}
+            key={mail.name}
+            id={mail.name}
+            className={classes.row}
+            onClick={() => readMsgHandler(mail.name)}
+          >
+            {!mail.isRead && <span className={classes.blueDot}>•</span>}
             <div className={classes.col}>{mail.from}</div>
             <div className={classes.col}>
               {mail.composeSubject}
-              <span style={{ color: "grey" }}>{mail.textArea}</span>
+              <span style={{ color: "grey" }}>{limitText(mail.textArea)}</span>
             </div>
             <div className={classes.col}>{mail.atTime}</div>
-          </div>
+          </Link>
         ))
       ) : (
         <div className={classes.row}>

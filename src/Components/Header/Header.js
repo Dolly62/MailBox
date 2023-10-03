@@ -8,6 +8,9 @@ import { BsPlusCircle } from "react-icons/bs";
 
 const Header = () => {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+
+  const unreadMsgCount = useSelector(state => state.composeMail.unreadMsgCount);
+  
   return (
     <Container className={classes.navContainer}>
       <Nav className={classes.navItem}>
@@ -23,7 +26,7 @@ const Header = () => {
         )}
         {isLoggedIn && (
           <div className={classes.row}>
-            <NavLink to="/inbox">Inbox</NavLink>
+            <NavLink to="/inbox">Inbox {unreadMsgCount}</NavLink>
           </div>
         )}
         {isLoggedIn && (

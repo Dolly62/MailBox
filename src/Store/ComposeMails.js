@@ -5,6 +5,7 @@ const mailSlice = createSlice({
   initialState: {
     sentMailMsg: [],
     receivedMailmsg: [],
+    unreadMsgCount: 0,
   },
   reducers: {
     replaceMails(state, action) {
@@ -14,7 +15,23 @@ const mailSlice = createSlice({
       state.sentMailMsg.push(action.payload);
     },
     addReceivedMails(state, action) {
-      state.receivedMailmsg.push(action.payload.receivedMailmsg);
+      state.receivedMailmsg = action.payload.receivedMailmsg;
+    },
+    markMsgAsRead(state, action) {
+      const { msgName, isRead } = action.payload;
+      const updatedMsg = state.receivedMailmsg.map((msg) => {
+        if (msg.name === msgName) {
+          return {
+            ...msg,
+            isRead: isRead,
+          };
+        }
+        return msg;
+      });
+      state.receivedMailmsg = updatedMsg;
+    },
+    updateUnreadMsgCount(state, action) {
+      state.unreadMsgCount = action.payload;
     },
     clearAllMails(state) {
       state.sentMailMsg = [];

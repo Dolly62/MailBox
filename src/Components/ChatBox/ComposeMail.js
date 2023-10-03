@@ -35,7 +35,6 @@ const ComposeMail = () => {
     const editEmail = emailId.replace(/[@.]/g, "");
     const editComposeEmail = composeEmail.replace(/[@.]/g, "");
 
-    
     const composeMailData = {
       from: emailId,
       composeEmail,
@@ -43,6 +42,7 @@ const ComposeMail = () => {
       textArea,
       atDate: formattedDate,
       atTime: formattedTime,
+      isRead: false,
     };
 
     try {
@@ -68,6 +68,7 @@ const ComposeMail = () => {
           textArea,
           atDate: formattedDate,
           atTime: formattedTime,
+          isRead: false,
         })
       );
       alert("Sent successfully");
@@ -136,7 +137,14 @@ const ComposeMail = () => {
     <div className={classes.container}>
       <form onSubmit={composeEmailSubmitHandler}>
         <div className={classes.row}>
-          <label htmlFor="to" style={{ fontWeight: "bold" }}>
+          <label
+            htmlFor="to"
+            style={{
+              fontWeight: "bold",
+              display: "inline-block",
+              width: "25px",
+            }}
+          >
             To:
           </label>
           <input
