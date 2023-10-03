@@ -12,7 +12,7 @@ const SideBar = () => {
     setNav((prevState) => !prevState);
   };
   return (
-    <div className={classes.gridContainer}>
+    <div className={classes.gridContainer} data-testid="sidebar">
       <div className={classes.left}>
         <FcMenu
           onClick={toggleHandler}
