@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { mailActions } from "../../Store/ComposeMails";
 import classes from "./Inbox.module.css";
 import { Link } from "react-router-dom/cjs/react-router-dom";
+import { AiOutlineDelete } from "react-icons/ai";
 
 const Inbox = () => {
   const receivedMailmsg = useSelector(
@@ -79,13 +80,32 @@ const Inbox = () => {
 
       const data = await response.json();
       console.log(data);
-      dispatch(mailActions.markMsgAsRead({ msgName: msgName, isRead: true }));
-      if(isRead){
-        dispatch(mailActions.updateUnreadMsgCount(-1))
+      dispatch(mailActions.markMsgAsRead({ msgName: msgName}));
+      if (isRead) {
+        dispatch(mailActions.updateUnreadMsgCount(-1));
       }
     } catch (error) {
       alert(error.message);
     }
+  };
+
+  //DELETE MAIL HANDLER
+  const deleteMailHandler = async (name) => {
+    const editEmail = email.replace(/[@.]/g, "");
+    try {
+      const response = await fetch(
+        `https://mailbox-client-477fb-default-rtdb.firebaseio.com/composeMail/${editEmail}/${name}.json`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to delete a mail");
+      }
+
+      dispatch(mailActions.deleteMail(name));
+    } catch (error) {}
   };
 
   return (
@@ -106,6 +126,12 @@ const Inbox = () => {
               <span style={{ color: "grey" }}>{limitText(mail.textArea)}</span>
             </div>
             <div className={classes.col}>{mail.atTime}</div>
+            <button
+              className={classes.dltebtn}
+              onClick={() => deleteMailHandler(mail.name)}
+            >
+              <AiOutlineDelete />
+            </button>
           </Link>
         ))
       ) : (
