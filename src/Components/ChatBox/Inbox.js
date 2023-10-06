@@ -2,8 +2,10 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { mailActions } from "../../Store/ComposeMails";
 import classes from "./Inbox.module.css";
-import { Link } from "react-router-dom/cjs/react-router-dom";
 import { AiOutlineDelete } from "react-icons/ai";
+import { GoUnread, GoRead } from "react-icons/go";
+import { Link } from "react-router-dom";
+import EntireMsg from "./EntireMsg";
 
 const Inbox = () => {
   const receivedMailmsg = useSelector(
@@ -17,11 +19,13 @@ const Inbox = () => {
 
   const MAX_CHARACTERS = 30;
 
+  //--------------------------------------------------FETCH MAIL FOR INBOX------------------------------------//
+
   const fetchMailDataForInbox = async () => {
     const editEmail = email.replace(/[@.]/g, "");
     try {
       const response = await fetch(
-        `https://mailbox-client-477fb-default-rtdb.firebaseio.com/composeMail/${editEmail}.json`
+        `https://mailbox-client-477fb-default-rtdb.firebaseio.com/composeMail/${editEmail}/inbox.json`
       );
 
       if (!response.ok) {
@@ -54,6 +58,8 @@ const Inbox = () => {
     }
   }, [isLoggedIn]);
 
+  //--------------------------------------------------LIMIT SET------------------------------------------------//
+
   const limitText = (text) => {
     if (text && text.length > MAX_CHARACTERS) {
       return text.substring(0, MAX_CHARACTERS) + "...";
@@ -61,12 +67,12 @@ const Inbox = () => {
     return text;
   };
 
-  // IS MESSAGE READ OR NOT HANDLER
+  //----------------------------------------------- IS MESSAGE READ OR NOT HANDLER---------------------------------------//
   const readMsgHandler = async (msgName, isRead) => {
     const editEmail = email.replace(/[@.]/g, "");
     try {
       const response = await fetch(
-        `https://mailbox-client-477fb-default-rtdb.firebaseio.com/composeMail/${editEmail}/${msgName}.json`,
+        `https://mailbox-client-477fb-default-rtdb.firebaseio.com/composeMail/${editEmail}/inbox/${msgName}.json`,
         {
           method: "PATCH",
           body: JSON.stringify({
@@ -79,8 +85,9 @@ const Inbox = () => {
       }
 
       const data = await response.json();
-      console.log(data);
-      dispatch(mailActions.markMsgAsRead({ msgName: msgName}));
+      console.log(data.isRead);
+
+      dispatch(mailActions.markMsgAsRead({ msgName: msgName, isRead: true }));
       if (isRead) {
         dispatch(mailActions.updateUnreadMsgCount(-1));
       }
@@ -89,12 +96,12 @@ const Inbox = () => {
     }
   };
 
-  //DELETE MAIL HANDLER
+  //---------------------------------------------DELETE MAIL HANDLER-------------------------------//
   const deleteMailHandler = async (name) => {
     const editEmail = email.replace(/[@.]/g, "");
     try {
       const response = await fetch(
-        `https://mailbox-client-477fb-default-rtdb.firebaseio.com/composeMail/${editEmail}/${name}.json`,
+        `https://mailbox-client-477fb-default-rtdb.firebaseio.com/composeMail/${editEmail}/inbox/${name}.json`,
         {
           method: "DELETE",
         }
@@ -105,40 +112,51 @@ const Inbox = () => {
       }
 
       dispatch(mailActions.deleteMail(name));
-    } catch (error) {}
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
   return (
     <div className={classes.container}>
       {receivedMailmsg && receivedMailmsg.length > 0 ? (
         receivedMailmsg.map((mail) => (
-          <Link
-            to={`/inbox/${mail.name}`}
+          <div
             key={mail.name}
             id={mail.name}
             className={classes.row}
-            onClick={() => readMsgHandler(mail.name)}
           >
-            {!mail.isRead && <span className={classes.blueDot}>•</span>}
             <div className={classes.col}>{mail.from}</div>
             <div className={classes.col}>
               {mail.composeSubject}
               <span style={{ color: "grey" }}>{limitText(mail.textArea)}</span>
             </div>
-            <div className={classes.col}>{mail.atTime}</div>
+            <div className={classes.col}>
+              <span>{mail.atTime}</span>
+              <span> {mail.atDate}</span>
+            </div>
             <button
-              className={classes.dltebtn}
+              className={classes.btn}
+              style={{ color: "grey" }}
+              onClick={() => readMsgHandler(mail.name)}
+            >
+              {!mail.isRead ? <GoUnread /> : <GoRead />}
+            </button>
+            <button
+              className={classes.btn}
               onClick={() => deleteMailHandler(mail.name)}
             >
               <AiOutlineDelete />
             </button>
-          </Link>
+            <Link to={`/inbox/${mail.name}`}>View</Link>
+          </div>
         ))
       ) : (
         <div className={classes.row}>
           <div style={{ margin: "2px auto" }}>No mail is found</div>
         </div>
       )}
+      <EntireMsg/>
     </div>
   );
 };

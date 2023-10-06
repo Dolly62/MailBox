@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import classes from "./ComposeMail.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { mailActions } from "../../Store/ComposeMails";
@@ -8,7 +8,6 @@ const ComposeMail = () => {
   const [composeSubject, setComposeSubject] = useState("");
   const [textArea, setTextArea] = useState("");
 
-  const [lastSentData, setLastSentData] = useState(null);
 
   const dispatch = useDispatch();
 
@@ -42,12 +41,18 @@ const ComposeMail = () => {
       textArea,
       atDate: formattedDate,
       atTime: formattedTime,
-      isRead: false,
     };
 
     try {
       const response = await fetch(
-        `https://mailbox-client-477fb-default-rtdb.firebaseio.com/composeMail/${editComposeEmail}.json`,
+        `https://mailbox-client-477fb-default-rtdb.firebaseio.com/composeMail/${editComposeEmail}/inbox.json`,
+        {
+          method: "POST",
+          body: JSON.stringify(composeMailData),
+        }
+      );
+      const senderResponse = await fetch(
+        `https://mailbox-client-477fb-default-rtdb.firebaseio.com/composeMail/${editEmail}/sent.json`,
         {
           method: "POST",
           body: JSON.stringify(composeMailData),
@@ -68,7 +73,6 @@ const ComposeMail = () => {
           textArea,
           atDate: formattedDate,
           atTime: formattedTime,
-          isRead: false,
         })
       );
       alert("Sent successfully");

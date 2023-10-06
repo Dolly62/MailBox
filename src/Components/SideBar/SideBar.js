@@ -4,10 +4,11 @@ import Routes from "./Routes";
 import classes from "./SideBar.module.css";
 import Header from "../Header/Header";
 import Search from "../Header/Search";
+import { useSelector } from "react-redux";
 
 const SideBar = () => {
   const [isNav, setNav] = useState(true);
-
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   const toggleHandler = () => {
     setNav((prevState) => !prevState);
   };
@@ -25,7 +26,7 @@ const SideBar = () => {
         )}
       </div>
       <div className={classes.right}>
-        <Search />
+        {isLoggedIn && <Search />}
         <Routes />
       </div>
     </div>
