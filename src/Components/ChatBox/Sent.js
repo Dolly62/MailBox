@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { mailActions } from "../../Store/ComposeMails";
 import classes from "./Sent.module.css";
 import { AiOutlineDelete } from "react-icons/ai";
+import { useHistory } from "react-router-dom";
 
 const Sent = () => {
   const mailMsg = useSelector((state) => state.composeMail.sentMailMsg);
@@ -10,6 +11,8 @@ const Sent = () => {
   const email = useSelector((state) => state.auth.email);
   // console.log(email);
   const dispatch = useDispatch();
+
+  const history = useHistory();
 
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
@@ -20,6 +23,7 @@ const Sent = () => {
 
   const fetchfunctionHandler = async () => {
     const editEmail = email.replace(/[@.]/g, "");
+    
     try {
       const response = await fetch(
         `https://mailbox-client-477fb-default-rtdb.firebaseio.com/composeMail/${editEmail}/sent.json`
@@ -47,9 +51,10 @@ const Sent = () => {
     if (isLoggedIn) {
       fetchfunctionHandler();
     } else {
+      console.log("cleared");
       dispatch(mailActions.clearAllMails());
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn, dispatch]);
 
   //------------------------------------------------DELETE MAIL HANDLER------------------------------//
   const deleteSentMailHandler = async (name) => {
@@ -72,7 +77,6 @@ const Sent = () => {
     }
   };
 
-
   //----------------------------------SET TEXT LIMIT------------------------//
   const limitText = (text) => {
     if (text && text.length > MAX_CHARACTERS) {
@@ -82,17 +86,26 @@ const Sent = () => {
   };
 
   const limitSubText = (subText) => {
-    if(subText && subText.length > SUB_MAX_CHARACTERS){
+    if (subText && subText.length > SUB_MAX_CHARACTERS) {
       return subText.substring(0, SUB_MAX_CHARACTERS) + "..";
     }
     return subText;
-  }
+  };
+
+  const redirectToDetails = (messageName) => {
+    history.push(`/sent-box/${messageName}`);
+  };
 
   return (
     <div className={classes.container}>
       {mailMsg && mailMsg.length > 0 ? (
         mailMsg.map((mail) => (
-          <div key={mail.name} id={mail.id} className={classes.row}>
+          <div
+            key={mail.name}
+            id={mail.name}
+            className={classes.row}
+            onClick={() => redirectToDetails(mail.name)}
+          >
             <div className={classes.col}>
               To:<span>{mail.composeEmail}</span>
             </div>

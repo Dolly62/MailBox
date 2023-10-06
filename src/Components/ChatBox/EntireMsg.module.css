@@ -1,0 +1,15 @@
+.container{
+    border: none;
+    border-radius: 6px;
+    width: 95%;
+    margin: 20px auto;
+    padding: 2px;
+    background: rgb(233, 233, 246);
+}
+
+.row{
+    display: flex;
+    background: rgb(233, 233, 246);
+    padding: 7px;
+    cursor: pointer;
+}

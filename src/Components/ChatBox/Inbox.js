@@ -4,8 +4,7 @@ import { mailActions } from "../../Store/ComposeMails";
 import classes from "./Inbox.module.css";
 import { AiOutlineDelete } from "react-icons/ai";
 import { GoUnread, GoRead } from "react-icons/go";
-import { Link } from "react-router-dom";
-import EntireMsg from "./EntireMsg";
+import { useHistory } from "react-router-dom";
 
 const Inbox = () => {
   const receivedMailmsg = useSelector(
@@ -16,6 +15,8 @@ const Inbox = () => {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
   const dispatch = useDispatch();
+
+  const history = useHistory();
 
   const MAX_CHARACTERS = 30;
 
@@ -56,7 +57,7 @@ const Inbox = () => {
     } else {
       dispatch(mailActions.clearAllMails());
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn, dispatch]);
 
   //--------------------------------------------------LIMIT SET------------------------------------------------//
 
@@ -117,6 +118,10 @@ const Inbox = () => {
     }
   };
 
+  const redirectToMessageDetails = (messageName) => {
+    history.push(`/inbox/${messageName}`);
+  };
+
   return (
     <div className={classes.container}>
       {receivedMailmsg && receivedMailmsg.length > 0 ? (
@@ -125,6 +130,7 @@ const Inbox = () => {
             key={mail.name}
             id={mail.name}
             className={classes.row}
+            onClick={() => redirectToMessageDetails(mail.name)}
           >
             <div className={classes.col}>{mail.from}</div>
             <div className={classes.col}>
@@ -144,11 +150,13 @@ const Inbox = () => {
             </button>
             <button
               className={classes.btn}
-              onClick={() => deleteMailHandler(mail.name)}
+              onClick={(e) => {
+                e.stopPropagation();
+                deleteMailHandler(mail.name);
+              }}
             >
               <AiOutlineDelete />
             </button>
-            <Link to={`/inbox/${mail.name}`}>View</Link>
           </div>
         ))
       ) : (
@@ -156,7 +164,6 @@ const Inbox = () => {
           <div style={{ margin: "2px auto" }}>No mail is found</div>
         </div>
       )}
-      <EntireMsg/>
     </div>
   );
 };
