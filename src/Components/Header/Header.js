@@ -10,6 +10,7 @@ const Header = () => {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
   const unreadMsgCount = useSelector(state => state.composeMail.unreadMsgCount);
+  const totalMsgInSent = useSelector(state => state.composeMail.totalMsg);
   
   return (
     <Container className={classes.navContainer}>
@@ -31,7 +32,7 @@ const Header = () => {
         )}
         {isLoggedIn && (
           <div className={classes.row}>
-            <NavLink to="/sent-box">Sent</NavLink>
+            <NavLink to="/sent-box">Sent {totalMsgInSent}</NavLink>
           </div>
         )}
         {!isLoggedIn && (

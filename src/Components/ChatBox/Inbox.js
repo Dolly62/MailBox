@@ -54,6 +54,10 @@ const Inbox = () => {
   useEffect(() => {
     if (isLoggedIn) {
       fetchMailDataForInbox();
+
+      const intervalId = setInterval(fetchMailDataForInbox, 2000);
+
+      return () => clearInterval(intervalId);
     } else {
       dispatch(mailActions.clearAllMails());
     }

@@ -41,6 +41,7 @@ const Sent = () => {
         }));
         // console.log(allMails);
         dispatch(mailActions.replaceMails({ sentMailMsg: allMails }));
+        dispatch(mailActions.updateTotalMsgInSent(allMails.length));
       }
     } catch (error) {
       alert(error.message);
@@ -50,6 +51,9 @@ const Sent = () => {
   useEffect(() => {
     if (isLoggedIn) {
       fetchfunctionHandler();
+      const intervalId = setInterval(fetchfunctionHandler, 2000);
+
+      return () => clearInterval(intervalId);
     } else {
       console.log("cleared");
       dispatch(mailActions.clearAllMails());

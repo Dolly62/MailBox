@@ -6,6 +6,7 @@ const mailSlice = createSlice({
     sentMailMsg: [],
     receivedMailmsg: [],
     unreadMsgCount: 0,
+    totalMsg: 0,
   },
   reducers: {
     replaceMails(state, action) {
@@ -49,6 +50,9 @@ const mailSlice = createSlice({
     },
     updateUnreadMsgCount(state, action) {
       state.unreadMsgCount = action.payload;
+    },
+    updateTotalMsgInSent(state, action) {
+      state.totalMsg = action.payload;
     },
     clearAllMails(state) {
       state.receivedMailmsg = [];
