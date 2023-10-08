@@ -87,14 +87,14 @@ function App() {
       fetchfunctionHandler();
       fetchMailDataForInbox();
 
-      const fetchfunctionHandlerId = setInterval(fetchfunctionHandler, 30000);
-      const fetchMailDataForInboxId = setInterval(fetchMailDataForInbox, 30000);
+      // const fetchfunctionHandlerId = setInterval(fetchfunctionHandler, 30000);
+      // const fetchMailDataForInboxId = setInterval(fetchMailDataForInbox, 30000);
 
-      return () => {
-        clearInterval(fetchfunctionHandlerId);
-        console.log("cleared Interval");
-        clearInterval(fetchMailDataForInboxId);
-      };
+      // return () => {
+      //   clearInterval(fetchfunctionHandlerId);
+      //   console.log("cleared Interval");
+      //   clearInterval(fetchMailDataForInboxId);
+      // };
     } else{
       dispatch(mailActions.clearAllMails());
     }
