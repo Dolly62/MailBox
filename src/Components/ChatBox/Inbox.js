@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { mailActions } from "../../Store/ComposeMails";
 import classes from "./Inbox.module.css";
@@ -10,58 +10,14 @@ const Inbox = () => {
   const receivedMailmsg = useSelector(
     (state) => state.composeMail.receivedMailmsg
   );
-  const email = useSelector((state) => state.auth.email);
 
-  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+  const email = useSelector((state) => state.auth.email);
 
   const dispatch = useDispatch();
 
   const history = useHistory();
 
   const MAX_CHARACTERS = 30;
-
-  //--------------------------------------------------FETCH MAIL FOR INBOX------------------------------------//
-
-  const fetchMailDataForInbox = async () => {
-    const editEmail = email.replace(/[@.]/g, "");
-    try {
-      const response = await fetch(
-        `https://mailbox-client-477fb-default-rtdb.firebaseio.com/composeMail/${editEmail}/inbox.json`
-      );
-
-      if (!response.ok) {
-        const errmsg = "Something went wrong";
-        throw new Error(errmsg);
-      }
-      const data = await response.json();
-      // console.log(data);
-
-      if (data) {
-        const allMails = Object.keys(data).map((key) => ({
-          name: key,
-          ...data[key],
-        }));
-        // console.log(allMails);
-        const unreadMails = allMails.filter((mail) => !mail.isRead);
-        dispatch(mailActions.addReceivedMails({ receivedMailmsg: allMails }));
-        dispatch(mailActions.updateUnreadMsgCount(unreadMails.length));
-      }
-    } catch (error) {
-      alert(error.message);
-    }
-  };
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      fetchMailDataForInbox();
-
-      const intervalId = setInterval(fetchMailDataForInbox, 2000);
-
-      return () => clearInterval(intervalId);
-    } else {
-      dispatch(mailActions.clearAllMails());
-    }
-  }, [isLoggedIn, dispatch]);
 
   //--------------------------------------------------LIMIT SET------------------------------------------------//
 
@@ -90,9 +46,11 @@ const Inbox = () => {
       }
 
       const data = await response.json();
-      console.log(data.isRead);
+      // console.log(data.isRead);
 
-      dispatch(mailActions.markMsgAsRead({ msgName: msgName, isRead: true }));
+      dispatch(
+        mailActions.markMsgAsRead({ msgName: msgName, isRead: data.isRead })
+      );
       if (isRead) {
         dispatch(mailActions.updateUnreadMsgCount(-1));
       }

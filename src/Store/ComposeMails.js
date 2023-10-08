@@ -4,13 +4,14 @@ const mailSlice = createSlice({
   name: "mail",
   initialState: {
     sentMailMsg: [],
+    sentInboxMail: [],
     receivedMailmsg: [],
     unreadMsgCount: 0,
     totalMsg: 0,
   },
   reducers: {
     replaceMails(state, action) {
-      state.sentMailMsg = action.payload.sentMailMsg;
+      state.sentInboxMail = action.payload.sentMailMsg;
     },
     addSentMails(state, action) {
       state.sentMailMsg.push(action.payload);
@@ -56,7 +57,9 @@ const mailSlice = createSlice({
     },
     clearAllMails(state) {
       state.receivedMailmsg = [];
-      state.sentMailMsg = [];
+      state.sentInboxMail = [];
+      state.totalMsg = 0;
+      state.unreadMsgCount = 0;
     },
   },
 });

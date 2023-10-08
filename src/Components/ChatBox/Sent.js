@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { mailActions } from "../../Store/ComposeMails";
 import classes from "./Sent.module.css";
@@ -6,7 +6,7 @@ import { AiOutlineDelete } from "react-icons/ai";
 import { useHistory } from "react-router-dom";
 
 const Sent = () => {
-  const mailMsg = useSelector((state) => state.composeMail.sentMailMsg);
+  const mailMsg = useSelector((state) => state.composeMail.sentInboxMail);
   // console.log(mailMsg);
   const email = useSelector((state) => state.auth.email);
   // console.log(email);
@@ -14,51 +14,9 @@ const Sent = () => {
 
   const history = useHistory();
 
-  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
-
   const MAX_CHARACTERS = 30;
   const SUB_MAX_CHARACTERS = 10;
 
-  //------------------------------------------------FETCH MAIL FOR SENTBOX----------------------------------//
-
-  const fetchfunctionHandler = async () => {
-    const editEmail = email.replace(/[@.]/g, "");
-    
-    try {
-      const response = await fetch(
-        `https://mailbox-client-477fb-default-rtdb.firebaseio.com/composeMail/${editEmail}/sent.json`
-      );
-
-      if (!response.ok) {
-        throw new Error("Something gone wrong");
-      }
-      const data = await response.json();
-
-      if (data) {
-        const allMails = Object.keys(data).map((key) => ({
-          name: key,
-          ...data[key],
-        }));
-        // console.log(allMails);
-        dispatch(mailActions.replaceMails({ sentMailMsg: allMails }));
-        dispatch(mailActions.updateTotalMsgInSent(allMails.length));
-      }
-    } catch (error) {
-      alert(error.message);
-    }
-  };
-
-  useEffect(() => {
-    if (isLoggedIn) {
-      fetchfunctionHandler();
-      const intervalId = setInterval(fetchfunctionHandler, 2000);
-
-      return () => clearInterval(intervalId);
-    } else {
-      console.log("cleared");
-      dispatch(mailActions.clearAllMails());
-    }
-  }, [isLoggedIn, dispatch]);
 
   //------------------------------------------------DELETE MAIL HANDLER------------------------------//
   const deleteSentMailHandler = async (name) => {

@@ -5,7 +5,7 @@ import classes from "./EntireMsg.module.css";
 
 const SentMsgDetails = () => {
   const { messageName } = useParams();
-  const sentMailMsg = useSelector((state) => state.composeMail.sentMailMsg);
+  const sentMailMsg = useSelector((state) => state.composeMail.sentInboxMail);
   // console.log("get");
   // console.log(sentMailMsg);
 
