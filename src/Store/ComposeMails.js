@@ -39,12 +39,12 @@ const mailSlice = createSlice({
     },
     deletefromSentMail(state, action) {
       const dlteMail = action.payload;
-      const mailToDelete = state.sentMailMsg.find(
+      const mailToDelete = state.sentInboxMail.find(
         (mail) => mail.name === dlteMail
       );
 
       if (mailToDelete) {
-        state.sentMailMsg = state.sentMailMsg.filter(
+        state.sentInboxMail = state.sentInboxMail.filter(
           (dlteEle) => dlteEle.name !== dlteMail
         );
       }
@@ -58,6 +58,7 @@ const mailSlice = createSlice({
     clearAllMails(state) {
       state.receivedMailmsg = [];
       state.sentInboxMail = [];
+      state.sentMailMsg = [];
       state.totalMsg = 0;
       state.unreadMsgCount = 0;
     },

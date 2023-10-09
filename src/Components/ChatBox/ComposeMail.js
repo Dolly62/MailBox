@@ -7,6 +7,7 @@ const ComposeMail = () => {
   const [composeEmail, setComposeEmail] = useState("");
   const [composeSubject, setComposeSubject] = useState("");
   const [textArea, setTextArea] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
 
   const dispatch = useDispatch();
@@ -43,6 +44,7 @@ const ComposeMail = () => {
       atTime: formattedTime,
     };
 
+    setIsLoading(true)
     try {
       const response = await fetch(
         `https://mailbox-client-477fb-default-rtdb.firebaseio.com/composeMail/${editComposeEmail}/inbox.json`,
@@ -75,56 +77,16 @@ const ComposeMail = () => {
           atTime: formattedTime,
         })
       );
-      alert("Sent successfully");
     } catch (error) {
       alert(error.message);
     } finally {
+      setIsLoading(false);
       setComposeEmail("");
       setComposeSubject("");
       setTextArea("");
     }
   };
 
-  // const fetchMailData = async () => {
-  //   const editEmail = emailId.replace(/[@.]/g, "");
-  //   try {
-  //     const response = await fetch(
-  //       `https://mailbox-client-477fb-default-rtdb.firebaseio.com/composeMail/${editEmail}.json`
-  //     );
-
-  //     if (!response.ok) {
-  //       const errorMsg = "Something went wrong";
-  //       throw new Error(errorMsg);
-  //     }
-
-  //     const data = await response.json();
-  //     // console.log(data);
-  //     if (data) {
-  //       const keyys = Object.keys(data);
-  //       const latestMailKey = keyys[0];
-  //       const extractedData = data[latestMailKey];
-  //       setLastSentData(extractedData);
-  //       // console.log(extractedData);
-  //     } else {
-  //       setLastSentData(null);
-  //     }
-  //   } catch (error) {
-  //     alert(error.message);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   fetchMailData();
-  // }, []);
-
-  // useEffect(() => {
-  //   // console.log(lastSentData);
-  //   if (lastSentData) {
-  //     setComposeEmail(lastSentData.composeEmail);
-  //     setComposeSubject(lastSentData.composeSubject);
-  //     setTextArea(lastSentData.textArea);
-  //   }
-  // }, [lastSentData]);
 
   const composeEmailHandler = (e) => {
     setComposeEmail(e.target.value);
@@ -172,7 +134,7 @@ const ComposeMail = () => {
 
         <div className="row">
           <textarea
-            id="subject"
+            id="textArea"
             placeholder="Write something..."
             value={textArea}
             onChange={composeTextAreaHandler}
@@ -181,7 +143,7 @@ const ComposeMail = () => {
         </div>
 
         <div className="row">
-          <button type="submit">Send</button>
+          <button type="submit" disabled={isLoading}>{isLoading ? "Sending mail.." : "Send mail"}</button>
         </div>
       </form>
     </div>

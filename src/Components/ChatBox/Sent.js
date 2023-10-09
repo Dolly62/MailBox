@@ -1,14 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { mailActions } from "../../Store/ComposeMails";
 import classes from "./Sent.module.css";
 import { AiOutlineDelete } from "react-icons/ai";
 import { useHistory } from "react-router-dom";
+import { fetchMailData } from "../../Store/mailActionCreator";
 
 const Sent = () => {
   const mailMsg = useSelector((state) => state.composeMail.sentInboxMail);
   // console.log(mailMsg);
   const email = useSelector((state) => state.auth.email);
+
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
   // console.log(email);
   const dispatch = useDispatch();
 
@@ -17,6 +20,15 @@ const Sent = () => {
   const MAX_CHARACTERS = 30;
   const SUB_MAX_CHARACTERS = 10;
 
+  //-------------------------------------------FETCH DATA--------------------------------------//
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      dispatch(fetchMailData());
+    } else {
+      dispatch(mailActions.clearAllMails());
+    }
+  }, [dispatch]);
 
   //------------------------------------------------DELETE MAIL HANDLER------------------------------//
   const deleteSentMailHandler = async (name) => {
@@ -39,7 +51,7 @@ const Sent = () => {
     }
   };
 
-  //----------------------------------SET TEXT LIMIT------------------------//
+  //---------------------------------------------SET TEXT LIMIT--------------------------------------//
   const limitText = (text) => {
     if (text && text.length > MAX_CHARACTERS) {
       return text.substring(0, MAX_CHARACTERS) + "...";
@@ -81,7 +93,10 @@ const Sent = () => {
             </div>
             <button
               className={classes.dlteBtn}
-              onClick={() => deleteSentMailHandler(mail.name)}
+              onClick={(e) => {
+                e.stopPropagation();
+                deleteSentMailHandler(mail.name);
+              }}
             >
               <AiOutlineDelete />
             </button>

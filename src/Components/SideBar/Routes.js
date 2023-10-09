@@ -3,6 +3,7 @@ import { Switch, Route, Redirect } from "react-router-dom";
 import Auth from "../Authentication/Auth";
 import Welcome from "../WelcomeScreen/Welcome";
 import { useSelector } from "react-redux";
+import ResetPass from "../Authentication/ResetPass";
 
 const Routes = () => {
   const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
@@ -46,7 +47,7 @@ const Routes = () => {
           {!isLoggedIn && <Redirect to="/login" />}
         </Route>
 
-        <Route path="/inbox/:messageName">
+        <Route path="/inbox/:msgName">
           <React.Suspense fallback={<div>Loading...</div>}>
             {isLoggedIn && <EntireMsg />}
           </React.Suspense>{" "}
@@ -58,6 +59,10 @@ const Routes = () => {
             {isLoggedIn && <Inbox />}
           </React.Suspense>
           {!isLoggedIn && <Redirect to="/login" />}
+        </Route>
+
+        <Route path="/reset-password">
+          {!isLoggedIn && <ResetPass/>}
         </Route>
 
         <Route path="/">

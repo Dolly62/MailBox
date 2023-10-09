@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { mailActions } from "../../Store/ComposeMails";
 import classes from "./Inbox.module.css";
 import { AiOutlineDelete } from "react-icons/ai";
 import { GoUnread, GoRead } from "react-icons/go";
 import { useHistory } from "react-router-dom";
+import { fetchMailData } from "../../Store/mailActionCreator";
 
 const Inbox = () => {
   const receivedMailmsg = useSelector(
@@ -12,6 +13,7 @@ const Inbox = () => {
   );
 
   const email = useSelector((state) => state.auth.email);
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
 
   const dispatch = useDispatch();
 
@@ -27,6 +29,16 @@ const Inbox = () => {
     }
     return text;
   };
+
+  //------------------------------------------------ FETCH DATA-----------------------------------------------//
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      dispatch(fetchMailData());
+    } else {
+      dispatch(mailActions.clearAllMails());
+    }
+  }, [dispatch]);
 
   //----------------------------------------------- IS MESSAGE READ OR NOT HANDLER---------------------------------------//
   const readMsgHandler = async (msgName, isRead) => {
@@ -54,6 +66,7 @@ const Inbox = () => {
       if (isRead) {
         dispatch(mailActions.updateUnreadMsgCount(-1));
       }
+      history.push(`/inbox/${msgName}`);
     } catch (error) {
       alert(error.message);
     }
@@ -80,10 +93,6 @@ const Inbox = () => {
     }
   };
 
-  const redirectToMessageDetails = (messageName) => {
-    history.push(`/inbox/${messageName}`);
-  };
-
   return (
     <div className={classes.container}>
       {receivedMailmsg && receivedMailmsg.length > 0 ? (
@@ -92,8 +101,11 @@ const Inbox = () => {
             key={mail.name}
             id={mail.name}
             className={classes.row}
-            onClick={() => redirectToMessageDetails(mail.name)}
+            onClick={() => {
+              readMsgHandler(mail.name);
+            }}
           >
+            {!mail.isRead && <span style={{ color: "red" }}>•</span>}
             <div className={classes.col}>{mail.from}</div>
             <div className={classes.col}>
               {mail.composeSubject}
@@ -103,13 +115,7 @@ const Inbox = () => {
               <span>{mail.atTime}</span>
               <span> {mail.atDate}</span>
             </div>
-            <button
-              className={classes.btn}
-              style={{ color: "grey" }}
-              onClick={() => readMsgHandler(mail.name)}
-            >
-              {!mail.isRead ? <GoUnread /> : <GoRead />}
-            </button>
+            <button className={classes.btn} style={{ color: "grey" }}></button>
             <button
               className={classes.btn}
               onClick={(e) => {

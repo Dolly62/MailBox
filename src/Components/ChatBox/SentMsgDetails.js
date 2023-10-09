@@ -12,7 +12,7 @@ const SentMsgDetails = () => {
   const msgDetails = sentMailMsg.find((mail) => mail.name === messageName);
 
   if (!msgDetails) {
-    return <p>Mail not found</p>;
+    return <p style={{ margin: "2px auto" }}>Mail not found</p>;
   }
 
   return (

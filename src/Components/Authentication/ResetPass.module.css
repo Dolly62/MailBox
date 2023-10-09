@@ -1,0 +1,57 @@
+.container{
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    text-align: center;
+    margin: 70px auto;
+    padding: 6px;
+    border: none;
+    border-radius: 6px;
+    box-shadow: 3px 3px 20px 1px rgb(243, 200, 200);
+}
+
+.container h2{
+    color: Brown;
+    font-size: 1.9rem;
+}
+
+@media (max-width: 768px) {
+    .container h2 {
+      font-size: 1.8em;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .container h2 {
+      font-size: 1.4em;
+    }
+  }
+
+.container p{
+    margin: 20px auto;
+    color: rgb(255, 183, 0);
+}
+
+.container input{
+    width: 90%;
+    margin: 6px auto;
+    border: none;
+    border-radius: 6px;
+    background: rgb(243, 200, 200);
+    height: 6vh;
+    font-size: 0.9rem;
+    padding: 4px;
+}
+
+.container button{
+    width: 40%;
+    margin: 16px auto;
+    border: none;
+    border-radius: 6px;
+    background: rgb(47, 68, 207);
+    height: 6vh;
+    color: white;
+    font-size: 0.9rem;
+    font-weight: bold;
+    cursor: pointer;
+}

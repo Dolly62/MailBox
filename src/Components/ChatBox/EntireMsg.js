@@ -5,12 +5,12 @@ import { useParams } from "react-router-dom";
 import classes from "./EntireMsg.module.css";
 
 const EntireMsg = () => {
-  const { messageName } = useParams();
+  const { msgName } = useParams();
   const receivedMailmsg = useSelector(
     (state) => state.composeMail.receivedMailmsg
   );
   // console.log(receivedMailmsg);
-  const detailedMsg = receivedMailmsg.find((mail) => mail.name === messageName);
+  const detailedMsg = receivedMailmsg.find((mail) => mail.name === msgName);
   // console.log("get");
 
   if (!detailedMsg) {
