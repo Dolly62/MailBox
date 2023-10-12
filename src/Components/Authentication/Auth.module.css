@@ -31,6 +31,7 @@
   font-size: 0.9rem;
   padding: 4px;
 }
+
 .btn {
   width: 40%;
   margin: 16px auto;
@@ -67,13 +68,9 @@
   }
 }
 
-.inputContainer {
-  position: relative;
-  display: inline-block;
-}
 
 .inputContainer button {
-  position: absolute;
+  position: relative;
   right: 30px;
   top: 30%;
   transform: translate(-50%);

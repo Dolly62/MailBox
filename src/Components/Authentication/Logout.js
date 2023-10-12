@@ -22,6 +22,7 @@ const Logout = () => {
         color: "white",
         fontSize: "1.1rem",
         fontWeight: "bold",
+        cursor: "pointer",
       }}
     >
       Logout

@@ -16,7 +16,7 @@ export const fetchMailData = () => {
       const sentData = await sentResponse.json();
 
       if (!sentData) {
-        console.log("clear");
+        // console.log("clear");
         dispatch(mailActions.clearAllMails());
       }
       if (sentData) {

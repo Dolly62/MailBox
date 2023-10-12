@@ -25,11 +25,10 @@ textarea {
   border-bottom: 1px solid rgb(196, 206, 207);
   margin: 7px auto;
   font-size: 0.9rem;
-  /* resize: vertical; */
 }
 
-input:focus {
-  border: 1px solid white;
+.row input:focus, textarea:focus{
+  outline: 2px solid brown;
 }
 
 .container button {
@@ -41,5 +40,6 @@ input:focus {
   font-weight: bold;
   font-size: 1rem;
   text-align: center;
-  height: 4vh;
+  height: 5vh;
+  cursor: pointer;
 }

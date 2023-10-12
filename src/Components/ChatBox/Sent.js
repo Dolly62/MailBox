@@ -28,7 +28,7 @@ const Sent = () => {
     } else {
       dispatch(mailActions.clearAllMails());
     }
-  }, [dispatch]);
+  }, [dispatch, isLoggedIn]);
 
   //------------------------------------------------DELETE MAIL HANDLER------------------------------//
   const deleteSentMailHandler = async (name) => {

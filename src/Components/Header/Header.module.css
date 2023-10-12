@@ -3,18 +3,16 @@
 }
 
 .navItem div {
-  margin: 6px;
+  margin-bottom: 7px;
   padding: 2px;
   font-size: 1.1rem;
   font-weight: bold;
+  width: 100%;
+  border-radius: 10px;
+  cursor: pointer;
+  height: 5vh;
 }
 .navItem a {
   text-decoration: none;
   color: white;
-}
-
-.row {
-  background: rgb(93, 93, 249);
-  border: none;
-  border-radius: 10px;
 }

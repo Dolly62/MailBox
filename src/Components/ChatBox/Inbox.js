@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { mailActions } from "../../Store/ComposeMails";
 import classes from "./Inbox.module.css";
 import { AiOutlineDelete } from "react-icons/ai";
-import { GoUnread, GoRead } from "react-icons/go";
 import { useHistory } from "react-router-dom";
 import { fetchMailData } from "../../Store/mailActionCreator";
 
@@ -38,7 +37,7 @@ const Inbox = () => {
     } else {
       dispatch(mailActions.clearAllMails());
     }
-  }, [dispatch]);
+  }, [dispatch, isLoggedIn]);
 
   //----------------------------------------------- IS MESSAGE READ OR NOT HANDLER---------------------------------------//
   const readMsgHandler = async (msgName, isRead) => {

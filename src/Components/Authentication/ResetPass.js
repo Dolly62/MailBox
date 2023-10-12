@@ -33,7 +33,7 @@ const ResetPass = () => {
 
       setIsEmail(true);
       const data = await response.json();
-      console.log(data.email);
+      // console.log(data.email);
     } catch (error) {
       alert(error.message);
     } finally {
