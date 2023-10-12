@@ -1,7 +1,7 @@
 .authForm {
   display: flex;
   flex-direction: column;
-  width: 50%;
+  width: 65%;
   text-align: center;
   margin: 70px auto;
   padding: 6px;
@@ -32,6 +32,9 @@
   padding: 4px;
 }
 
+.formstart input:focus{
+  outline: 2px solid brown;
+}
 .btn {
   width: 40%;
   margin: 16px auto;
@@ -68,9 +71,13 @@
   }
 }
 
+.inputContainer {
+  position: relative;
+  display: inline-block;
+}
 
 .inputContainer button {
-  position: relative;
+  position: absolute;
   right: 30px;
   top: 30%;
   transform: translate(-50%);
